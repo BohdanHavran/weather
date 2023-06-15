@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;600&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<div class="wrapper">
+			<div id="weather" class="weather">
+			</div>
+		</div>
+		<script type="text/javascript">
+			const weatherBlock = document.querySelector('#weather');
+
+			async function loadWeather(e){
+			   const server = 'https://api.openweathermap.org/data/2.5/weather?units=metric&q=Lviv&appid=3b5b12a3de38cd4450c6db08259a395c';
+			   const response = await fetch(server, {
+			      method: 'GET',
+			   });
+			   const responseResult = await response.json();
+
+			   if (response.ok){
+			      getWeather(responseResult);
+			   }
+			   else{
+			      weatherBlock.innerHTML = responseResult.message;
+			   }
+			}
+
+			function getWeather(data){
+
+			   console.log(data);
+
+			   const location = data.name;
+			   const temp = Math.round(data.main.temp);
+			   const feelsLike = Math.round(data.main.feels_like);
+			   const weatherStatus = data.weather[0].main;
+			   const weatherIcon = data.weather[0].icon;
+
+
+			   const template = `
+			   <div class="weather_header">
+			      <div class="weather_main">
+			         <div class="weather_city">${location}</div>
+			          <div class="weather_status">${weatherStatus}</div>
+			      </div>
+			      <div class="weather_icon">
+			         <img src="http://openweathermap.org/img/w/${weatherIcon}.png" alt="${weatherIcon}">
+			      </div>
+			   </div>
+			   <div class="weather_temp">${temp} °С</div>
+			   <div class="weather_feels-like">Feels like: ${feelsLike} °С</div>`;
+
+			   weatherBlock.innerHTML = template;
+			}
+
+			if (weatherBlock){
+			   loadWeather();
+			}
+			function refreshPage() {
+			  location.reload(); // Оновлюємо сторінку
+			}
+			setInterval(refreshPage, 300000);
+		</script>
+		<style>
+			body{
+				background-color: #a9a9a9;
+			}
+			.weather {
+			  background-color: #5f9ea0;
+			  padding: 10px;
+			  width: 500px;
+			  border-radius: 5px;
+			  text-align: center;
+			  margin-left: auto;
+			  margin-right: auto;
+			  margin-top: auto;
+			}
+
+			.weather_header {
+			  display: flex;
+			  align-items: center;
+			  justify-content: center;
+			  margin-bottom: 10px;
+			}
+
+			.weather_main {
+			  flex-grow: 1;
+			  text-align: left;
+			}
+
+			.weather_city {
+			  font-family: 'Rubik', sans-serif;
+			  color: #ffffff;
+			  font-size: 50px;
+			  font-weight: bold;
+			}
+
+			.weather_status {
+			  font-family: 'Rubik', sans-serif;
+			  color: #ffffff;
+			  font-weight: 300;
+			  font-size: 16px;
+			  margin-top: 5px;
+			}
+
+			.weather_icon {
+			  margin-left: 10px;
+			}
+
+			.weather_icon img {
+			  width: 50px;
+			  height: 50px;
+			}
+
+			.weather_temp {
+			  font-family: 'Rubik', sans-serif;
+			  font-size: 30px;
+			  font-weight: bold;
+			  margin-bottom: 5px;
+			  text-align: left;
+			  color: #ffffff;
+			}
+
+			.weather_feels-like {
+			  font-family: 'Rubik', sans-serif;
+			  font-size: 16px;
+			  font-weight: 300;
+			  text-align: left;
+			  color: #ffffff;
+			}
+
+		</style>
+	</body>
+</html>
